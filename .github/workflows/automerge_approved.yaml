@@ -1,0 +1,53 @@
+# Why not a github ready solution:
+# https://wiki.saritasa.rocks/python/github-actions/auto-merge
+name: Auto-merge approved automated PR
+
+on:
+  # Trigger merge pr if review submitted
+  pull_request_review:
+    types: [submitted]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  merge_pr:
+    # Skip in non auto generated PRs
+    if: contains(github.event.pull_request.labels.*.name, 'automated-pr')
+    name: Merge PR
+    runs-on: saritasa-rocks-eks
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Generate token
+        # Docs for action: https://github.com/marketplace/actions/github-app-token
+        uses: tibdex/github-app-token@v2
+        id: generate-token
+        with:
+          app_id: ${{ secrets.SARITASA_GITHUB_BOT_ID }}
+          private_key: ${{ secrets.SARITASA_GITHUB_BOT_PRIVATE_KEY }}
+      # Docs for action: https://github.com/marketplace/actions/wait-on-check
+      - name: Wait for checks to succeed
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          # To wait for all other checks to complete, set `running-workflow-name`
+          # to the name of the current job https://github.com/marketplace/actions/wait-on-check#running-workflow-name
+          running-workflow-name: 'Merge PR'
+          repo-token: ${{ steps.generate-token.outputs.token }}
+          wait-interval: 10  # seconds
+          allowed-conclusions: success
+      - name: Merge pull request
+        id: automerge
+        # Docs for action: https://github.com/marketplace/actions/merge-pull-requests-automerge-action
+        uses: pascalgn/automerge-action@v0.16.3
+        env:
+          MERGE_LABELS: automated-pr  # Defines which PR labels should be automatically merged
+          MERGE_REQUIRED_APPROVALS: 2
+          GITHUB_TOKEN:  ${{ steps.generate-token.outputs.token }}
+      - if: steps.automerge.outputs.mergeResult == 'skipped'
+        name: Feedback
+        run: |
+          echo "Not enough approvals. Required: 2"

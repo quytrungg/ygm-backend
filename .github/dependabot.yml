@@ -1,0 +1,16 @@
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# We're not using dependabot for python deps, because bot creates pr for each
+# dependency which is hard to review in whole scope. In github actions case,
+# there are a few and updates are for major versions(which happens not so often)
+version: 2
+updates:
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "00:00"
+  open-pull-requests-limit: 10
+  commit-message:
+    prefix: "[automated-commit] "
+  labels:
+    - "automated-pr"

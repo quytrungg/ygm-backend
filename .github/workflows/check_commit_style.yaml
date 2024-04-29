@@ -1,0 +1,37 @@
+name: Check commit style
+
+on:
+  pull_request:
+  push:
+    branches: [ main, develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  commit-style:
+    runs-on: saritasa-rocks-eks
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/local_build.txt') }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install -U pip setuptools wheel
+          pip install --requirement requirements/local_build.txt
+      - name: Check commit style
+        if: ${{ github.base_ref != '' }}
+        # Ignore branch rule since GitHub actions create it's own merge branch
+        # Ignore WIP/wip ignore rule
+        run: |
+          gitlint --commits "origin/${{github.base_ref}}..origin/${{github.head_ref}}" -c general.ignore=UC1 -c ignore-by-title.regex="^\[automated-commit\]"

@@ -1,0 +1,10 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>Following our discussion, please click the link below to sign the {{contract.name}} contract:</p>
+    <a href="{{contract_public_url}}" target="_blank">{{contract_public_url}}</a>
+    <p>Thanks, {{volunteer_name}}.</p>
+  {% endautoescape %}
+{% endblock %}

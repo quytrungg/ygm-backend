@@ -1,0 +1,10 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>You've got more! Here's a contract needing approval. Please click the link below to view contract.</p>
+    <a href="{{contract_detail_url}}" target="_blank">{{contract_detail_url}}</a>
+    <p>Keep them coming!</p>
+  {% endautoescape %}
+{% endblock %}

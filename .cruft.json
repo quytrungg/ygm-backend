@@ -1,0 +1,17 @@
+{
+  "template": "git@github.com:saritasa-nest/saritasa-python-boilerplate-django.git",
+  "commit": "9f7fc576bc95ff7e44de5e2123ee1c47c5d4b4de",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "ygm",
+      "jira_key": "YGMP1",
+      "subdomain": "ygm",
+      "repo_name": "ygm-backend",
+      "repo_frontend_name": "ygm-frontend",
+      "python_version": "3.11",
+      "_template": "git@github.com:saritasa-nest/saritasa-python-boilerplate-django.git"
+    }
+  },
+  "directory": null
+}

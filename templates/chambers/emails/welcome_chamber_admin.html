@@ -1,0 +1,13 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>Hello {{chamber_admin.first_name}} {{chamber_admin.last_name}}!</p>
+    <p>
+      You've been invited as chamber admin of {{chamber.name}}.
+      Please follow <a href="{{registration_url}}?token={{uid}}-{{token}}">this link</a> to complete
+      the registration process.
+    </p>
+  {% endautoescape %}
+{% endblock %}

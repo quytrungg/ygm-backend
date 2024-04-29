@@ -1,0 +1,55 @@
+-r production.txt
+
+# The Django Debug Toolbar is a configurable set of panels that display various debug information
+# about the current request/response and when clicked, display more details about the panel's content.
+# https://django-debug-toolbar.readthedocs.io/en/latest/
+django-debug-toolbar
+
+# Control CORS headers from within the app
+# CORS is managed by Nginx in a production environment,
+# but this package provides CORS for local development with a local frontend.
+# https://pypi.org/project/django-cors-headers/
+django-cors-headers
+
+# Needed to run runserver_plus
+Werkzeug
+
+# Improved REPL
+ipdb
+ipython
+
+# Linters
+# https://pylama.readthedocs.io/en/latest/#configuration-files
+# Freeze version because of the issue:
+# https://github.com/pylint-dev/pylint/issues/9144
+pylint==2.*
+pylint_django
+pylint-pytest
+pylint_quotes
+
+# Flake8
+# https://flake8.pycqa.org/en/latest/
+flake8
+# A plugin for Flake8 finding likely bugs and design problems in your program.
+# https://github.com/PyCQA/flake8-bugbear
+flake8-bugbear
+# Extension to enforce better comma placement.
+# https://github.com/PyCQA/flake8-commas
+flake8-commas
+# A flake8 plugin checking common style issues or inconsistencies with pytest-based tests.
+# https://github.com/m-burst/flake8-pytest-style
+flake8-pytest-style
+# A flake8 plugin that warn about backslashes usage.
+# https://github.com/wemake-services/flake8-broken-line
+flake8-broken-line
+# A simple module that adds an extension for the fantastic pydocstyle tool to flake8.
+# https://github.com/PyCQA/flake8-docstrings
+flake8-docstrings
+# McCabe complexity checker.
+# https://github.com/PyCQA/mccabe
+mccabe
+
+# Provide management command to check if primary database is ready to accept
+# connections
+# https://github.com/painless-software/django-probes
+django-probes

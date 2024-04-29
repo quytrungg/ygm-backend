@@ -1,0 +1,8 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    {{ note_template }}
+  {% endautoescape %}
+{% endblock %}

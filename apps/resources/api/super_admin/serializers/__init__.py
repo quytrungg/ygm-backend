@@ -1,0 +1,2 @@
+from .resource import ResourceSerializer
+from .resource_category import ResourceCategorySerializer

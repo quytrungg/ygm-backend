@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: Django",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/manage.py",
+        "preLaunchTask": "Launch containers and wait for DB",
+        "args": [
+            "runserver_plus"
+        ],
+        "django": true,
+        "justMyCode": false
+      },
+      {
+        "name": "Python: Django With SQL Logs",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/manage.py",
+        "preLaunchTask": "Launch containers and wait for DB",
+        "args": [
+            "runserver_plus",
+            "--print-sql"
+        ],
+        "django": true,
+        "justMyCode": false
+      }
+    ]
+  }

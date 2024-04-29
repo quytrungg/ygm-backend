@@ -1,0 +1,163 @@
+# *************************************************
+# Django packages
+# *************************************************
+django
+
+# Decouple helps you to organize your settings so that you can change
+# parameters without having to redeploy your app.
+# https://github.com/HBNetwork/python-decouple
+python-decouple
+
+# Different useful Django utils
+# https://django-extensions.readthedocs.io/en/latest/
+django-extensions
+
+# Filter querysets dynamically
+# https://django-filter.readthedocs.io/en/stable/
+django-filter
+
+# Raw operations on the image (like to crop avatars etc)
+# https://django-imagekit.readthedocs.io/en/latest/
+django-imagekit
+
+# For soft-deletion of database objects
+# https://github.com/makinacorpus/django-safedelete
+django-safedelete
+
+# Case insensitive model fields
+# https://github.com/voiio/django-citext
+django-citext
+
+# Low-level library for working with images
+# https://pillow.readthedocs.io/en/stable/
+Pillow
+
+# HTML sanitizing library that escapes or strips markup and attributes
+# https://github.com/matthiask/html-sanitizer
+html-sanitizer
+
+# Django REST Framework
+# https://www.django-rest-framework.org/
+djangorestframework
+# Secure token-based auth for drf
+# https://james1345.github.io/django-rest-knox/
+django-rest-knox
+
+# OpenApi auto specs generator
+# https://drf-spectacular.readthedocs.io/en/latest/
+# Frozen because of warnings
+# https://github.com/ghazi-git/drf-standardized-errors/issues/53
+drf-spectacular==0.26.5
+
+# Standardize DRF API error responses with drf-spectacular support
+# https://drf-standardized-errors.readthedocs.io/en/latest/
+drf-standardized-errors[openapi]
+
+# Storage to AWS S3
+# https://django-storages.readthedocs.io/en/latest/
+django-storages[boto3]
+
+# Rich Text editor
+# https://github.com/django-ckeditor/django-ckeditor
+django-ckeditor
+
+# Database abstraction layer
+# https://pypi.org/project/psycopg-binary/
+psycopg[binary]
+
+# Celery
+# https://docs.celeryproject.org/en/stable/
+celery[redis]
+# Periodic tasks
+# https://github.com/celery/django-celery-beat
+django-celery-beat
+
+# Redis cache backend for Django
+# https://github.com/jazzband/django-redis
+django-redis
+
+# Django health check
+# This project checks for various conditions and provides reports when anomalous behavior is detected.
+# https://github.com/KristianOellegaard/django-health-check
+django-health-check
+
+# django-s3direct
+# fork of django-s3direct with django rest framework support
+# In this fork we added support of drf because this package was made exclusively for django views
+# and it's difficult and hacky to make it support drf (by using default view). Also we added expiration time.
+# https://github.com/Saritasa/django-s3direct
+git+https://github.com/Saritasa/django-s3direct.git
+
+# Custom Passwrod Validation
+# https://github.com/ezrajrice/django_advanced_password_validation
+django_advanced_password_validation
+
+# Import Export Extension for better importing
+# https://django-import-export-extensions.readthedocs.io
+django-import-export-extensions
+
+# Allows Django models to be ordered and provides a simple admin interface
+# for reordering them.
+# https://github.com/django-ordered-model/django-ordered-model
+django-ordered-model
+
+# Improve django admin with custom widgets
+# https://github.com/yourlabs/django-autocomplete-light
+django-autocomplete-light
+
+# Testing
+pytest
+# Provides useful tools for testing Django apps
+# Docs https://pytest-django.readthedocs.io/en/latest/
+pytest-django
+# To run test in parallel
+# Docs: https://pypi.org/project/pytest-xdist/
+pytest-xdist
+# To prettify pytest output
+pytest-sugar
+# Support use a fixture as one of the values passed in @pytest.mark.parametrize
+# https://github.com/dev-petrov/pytest-lazy-fixtures
+pytest-lazy-fixtures
+# Fast creating of model instances. May be used in tests
+# https://factoryboy.readthedocs.io/en/stable/
+factory-boy
+
+# Prettified output in logging
+# https://rich.readthedocs.io/en/latest/introduction.html
+rich
+
+# convert Markdown syntax into HTML
+# Differences
+# markdown - https://jing.saritasa.com/StanislavKhlud/StanislavKhlud_13-21-40-0695d56330c2fb7a101829fa25.png
+# mistune - https://jing.saritasa.com/StanislavKhlud/StanislavKhlud_13-22-47-84e2122e18f54b6563433046b2.png
+# Also mistune has better performance -> https://github.com/lepture/mistune/issues/1
+# Learn more here -> https://github.com/lepture/mistune
+mistune
+
+# DateTime manipulation library
+# https://arrow.readthedocs.io/en/stable/
+arrow
+
+# Python client for Sentry
+# https://docs.sentry.io/platforms/python/guides/django/
+sentry-sdk
+
+## Devops tools
+
+# uwsgi
+# The uWSGI server as a Python module
+# https://pypi.org/project/pyuwsgi/
+pyuwsgi
+# uwsgitop is a top-like command that uses the uWSGI Stats Server to monitor your uwsgi application.
+# https://pypi.org/project/uwsgitop/
+uwsgitop
+
+# Sentry monitoring tool sdk
+# https://docs.sentry.io/platforms/python/guides/django/
+sentry-sdk[django]
+
+# Mysql client
+mysqlclient
+
+# Twilio client
+twilio

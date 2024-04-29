@@ -1,0 +1,31 @@
+-r production.txt
+
+# The Django Debug Toolbar is a configurable set of panels that display various debug information
+# about the current request/response and when clicked, display more details about the panel's content.
+# https://django-debug-toolbar.readthedocs.io/en/latest/
+django-debug-toolbar
+
+# Control CORS headers from within the app
+# CORS is managed by Nginx in a production environment,
+# but this package provides CORS for local development with a local frontend.
+# https://pypi.org/project/django-cors-headers/
+django-cors-headers
+
+# Needed to run runserver_plus
+Werkzeug
+
+# Improved REPL
+ipdb
+ipython
+
+# Linters
+# https://pylama.readthedocs.io/en/latest/#configuration-files
+pylint
+pylint_django
+pylint-pytest
+pylint_quotes
+
+# Provide management command to check if primary database is ready to accept
+# connections
+# https://github.com/painless-software/django-probes
+django-probes

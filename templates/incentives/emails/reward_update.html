@@ -1,0 +1,10 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>
+      Congratulations! Your sales have earned you {{ incentive_name }}.
+    </p>
+  {% endautoescape %}
+{% endblock %}

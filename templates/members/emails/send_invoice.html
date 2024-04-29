@@ -1,0 +1,40 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>Invoice #{{ invoice.id }} to Member #{{ member.pk }}.</p>
+    <p>Invoice {{ invoice.name }}</p>
+    <p>From:</p>
+    <p>{{ chamber.name }}</p>
+    <p>{{ chamber.address }}, {{ chamber.city }}, {{ chamber.state }} {{ chamber.zipcode }}</p>
+    <p>Tel: {{ chamber.trc_coord_office_phone }} | Fax: {{ chamber.trc_coord_office_phone_ext }}</p>
+    <p>To:</p>
+    <p>{{ member.name }}</p>
+    <p>ATTN: {{ member.first_name }} {{member.last_name}}</p>
+    <p>{{ member.address }}</p>
+    <p>{{ member.city }}, {{ member.state }} {{ member.zipcode }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Event/Publication</th>
+          <th>Sponsorship/Membership Level</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for instance in levels %}
+          <tr>
+            <td>{{ instance.level.product.pk }}</td>
+            <td>{{ created_date }}</td>
+            <td>{{ instance.level.product.category.name }}</td>
+            <td>{{ instance.level.name }}</td>
+            <td>{{ instance.cost }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endautoescape %}
+{% endblock %}

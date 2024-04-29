@@ -1,0 +1,15 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    <p>Hello, {{volunteer.full_name}}!</p>
+    <p>
+      You’ve been invited to participate in the {{chamber.name}}’s Total Resource Campaign to provide local businesses – both small and large –
+      with avenues to reach diversified customer groups to grow their businesses by accessing targeted branding opportunities and reach desired targeted audiences.
+      You’ll learn all about this program at the training you’ve been invited to attend, but for now, please follow <a href="{{registration_url}}?token={{uid}}-{{token}}">this link</a> to complete your registration.
+      We look forward to seeing you soon.
+    </p>
+    <p>{{chamber_admin.full_name}}</p>
+  {% endautoescape %}
+{% endblock %}

@@ -1,0 +1,120 @@
+# Cruft itself provide an action for making update with boilerplate
+# https://cruft.github.io/cruft/#automating-updates-with-github-actions
+
+# But we create our own action with some differences:
+# - Add ssh-agent action for accessing private boilerplate
+# - Use Github App to generate token for creating PR
+# - Just create one PR for updating the changes with boilerplate
+
+name: Sync boilerplate
+
+on:
+  schedule:
+    # Run action at 21:00 UTC every Wednesday https://crontab.guru/#0_21_*_*_3
+    - cron: '0 21 * * 3'
+  # or trigger action manually
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync_boilerplate:
+    name: Sync boilerplate
+    runs-on: saritasa-rocks-eks
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up ssh-agent
+        # Doc for action: https://github.com/webfactory/ssh-agent/
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DJANGO_BOILERPLATE_PRIVATE_KEY }}
+      - name: Update ssh hostkey
+        run: ssh-keyscan github.com > ~/.ssh/known_hosts
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Sync boilerplate
+        run: |
+          pip install cruft
+          cruft update --skip-apply-ask
+      - name: Check update conflicts
+        # Check if there are existing unapplied or unmerged files
+        id: check-conflicts
+        run: |
+          CONFLICTS=0
+          UNMERGED_FILES=0
+          git diff --name-status --diff-filter=U --quiet --exit-code || UNMERGED_FILES=1
+
+          if [[ -n `git status --porcelain "*.rej"` ]] || [[ $UNMERGED_FILES -ne 0 ]]; then
+            CONFLICTS=1
+          fi
+
+          echo "conflicts=$CONFLICTS" >> "$GITHUB_OUTPUT"
+      - name: Specify updates
+        # If conflicts exist when update by cruft,
+        # PR just update .cruft.json file only,
+        # also, add labels and message to notice CODEOWNERS to fix manually
+        id: specify-updates
+        run: |
+          ADD_PATHS="."
+          LABELS="automated-pr"
+          BODY="Created by GitHub Actions"
+
+          CONFLICTS_LABELS="manually-fix-needed, invalid"
+          CONFLICTS_BODY=$(cat <<END_OF_CONFLICT
+          Conflicts occur when updating changes with boilerplate using [Cruft](https://cruft.github.io/cruft/)
+          Please resolve this manually using below workflow:
+          - Close this PR
+          - Checkout default (\`develop\`) branch
+          - Start new branch, like \`git checkout -b feature/SA3P-49-sync-boilerplate\`
+          - Run \`cruft update\`, resolve conflicts
+          - Create PR as usual
+
+          Or: Merge this PR to reject new updates detected with Cruft.
+
+          $BODY
+          END_OF_CONFLICT
+          )
+
+          if [[ ${{ steps.check-conflicts.outputs.conflicts }} -ne 0 ]]; then
+            git add .
+            git restore --staged .
+            git stash -- .cruft.json
+            git reset --hard
+            git stash pop
+
+            ADD_PATHS=".cruft.json"
+            LABELS="$LABELS, $CONFLICTS_LABELS"
+            BODY="$CONFLICTS_BODY"
+          fi
+
+          echo "add_paths=$ADD_PATHS" >> "$GITHUB_OUTPUT"
+          echo "labels=$LABELS" >> "$GITHUB_OUTPUT"
+          echo "body<<END_OF_BODY" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "END_OF_BODY" >> "$GITHUB_OUTPUT"
+      - name: Generate token
+        # Docs for action: https://github.com/marketplace/actions/github-app-token
+        uses: tibdex/github-app-token@v2
+        id: generate-token
+        with:
+          app_id: ${{ secrets.SARITASA_GITHUB_BOT_ID }}
+          private_key: ${{ secrets.SARITASA_GITHUB_BOT_PRIVATE_KEY }}
+      - name: Create Pull Request
+        # Docs for action: https://github.com/marketplace/actions/create-pull-request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          add-paths: ${{ steps.specify-updates.outputs.add_paths }}
+          commit-message: "[automated-commit] Sync boilerplate updates"
+          title: Sync boilerplate
+          body: |
+            ${{ steps.specify-updates.outputs.body }}
+          labels: ${{ steps.specify-updates.outputs.labels }}
+          branch: feature/sync-boilerplate
+          delete-branch: true

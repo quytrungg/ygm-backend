@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Event/Publication</th>
+      <th>Sponsorship/Membership Level</th>
+      <th>Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for instance in levels %}
+      <tr>
+        <td>{{ created_date }}</td>
+        <td>{{ instance.level.product.category.name }}</td>
+        <td>{{ instance.level.name }}</td>
+        <td>{{ instance.cost }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

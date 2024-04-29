@@ -1,0 +1,49 @@
+# Automatically update dependencies
+# https://wiki.saritasa.rocks/python/github-actions/update-dependencies
+name: Update dependencies
+
+on:
+  schedule:
+  # Run action at 21:00 UTC every Monday https://crontab.guru/#0_21_*_*_1
+  - cron: '0 21 * * 1'
+  # or trigger action manually
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update_dependencies:
+    name: Update dependencies
+    runs-on: saritasa-rocks-eks
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Update dependencies
+        run: |
+          pip install --requirement requirements/local_build.txt
+          inv project.install-tools
+          inv project.pip-compile --update
+      - name: Generate token
+        # Docs for action: https://github.com/marketplace/actions/github-app-token
+        uses: tibdex/github-app-token@v2
+        id: generate-token
+        with:
+          app_id: ${{ secrets.SARITASA_GITHUB_BOT_ID }}
+          private_key: ${{ secrets.SARITASA_GITHUB_BOT_PRIVATE_KEY }}
+      - name: Create Pull Request
+        # Docs for action: https://github.com/marketplace/actions/create-pull-request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          commit-message: "[automated-commit] Update dependencies"
+          title: Update dependencies
+          body: Created by GitHub Actions
+          base: develop
+          labels: automated-pr
+          branch: feature/updates-dependencies
+          delete-branch: true
