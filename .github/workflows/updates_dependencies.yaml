@@ -37,7 +37,7 @@ jobs:
           private_key: ${{ secrets.SARITASA_GITHUB_BOT_PRIVATE_KEY }}
       - name: Create Pull Request
         # Docs for action: https://github.com/marketplace/actions/create-pull-request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: "[automated-commit] Update dependencies"
